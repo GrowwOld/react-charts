@@ -1,1 +1,5 @@
 node_modules
+tsconfig.types.tsbuildinfo
+tsconfig.tsbuildinfo
+lib
+es
