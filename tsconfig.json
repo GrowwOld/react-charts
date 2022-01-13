@@ -1,0 +1,25 @@
+{
+  "extends": "@groww-tech/tsconfig",
+  "compilerOptions": {
+    "target": "esnext", // Specify ECMAScript target version
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ], // List of library files to be included in the compilation
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "allowJs": true, // Allow JavaScript files to be compiled
+    "checkJs": false, // Report errors in .js files.
+    "noEmit": true, // TS Compiler will not emit JS files
+    "baseUrl": "src",
+    },
+  "include": [
+    "src/**/*" // *** The files TypeScript should type check ***
+  ],
+  "exclude": [
+    "node_modules",
+    "build"
+  ], // *** The files to not type check ***
+}
