@@ -9,16 +9,14 @@ import { terser } from 'rollup-plugin-terser'
 import visualizer from 'rollup-plugin-visualizer'
 import postcss from "rollup-plugin-postcss";
 
-import replace from '@rollup/plugin-replace'
-
-const external = ['react', 'react-dom', 'react-charts']
+const external = ['react', 'react-dom']
 
 const globals = {
   react: 'React',
   'react-dom': 'ReactDOM'
 }
 
-const inputSrcs = [['src/index.ts']]
+const inputSrcs = [['src/index.ts', 'react-charts', 'react-charts']]
 
 const extensions = ['.js', '.jsx', '.ts', '.tsx']
 const babelConfig = { extensions, runtimeHelpers: true }
@@ -31,43 +29,21 @@ export default inputSrcs
         input: input,
         output: {
           name,
-          file: `dist/${file}.development.js`,
+          file: `lib/${file}.min.js`,
           format: 'commonjs',
           sourcemap: true,
           globals,
         },
         external,
         plugins: [
-          resolve(resolveConfig),
-          babel(babelConfig),
-          commonJS(),
-          externalDeps(),
-        ],
-      },
-      {
-        input: input,
-        output: {
-          name,
-          file: `dist/${file}.production.min.js`,
-          format: 'commonjs',
-          sourcemap: true,
-          globals,
-        },
-        external,
-        plugins: [
-
           postcss({
             plugins: [ postcssImport(), postcssUrl({ url: 'inline' }) ],
             extract: true,
             extract: 'index.css',
             extensions: [ '.css' ]
           }),
-          replace({
-            'process.env.NODE_ENV': `"production"`,
-            delimiters: ['', ''],
-          }),
           resolve(resolveConfig),
-          babel(),
+          babel(babelConfig),
 
           commonJS(),
 
