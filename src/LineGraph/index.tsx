@@ -6,7 +6,7 @@ import { EventType } from '@visx/event/lib/types';
 import { LinePath } from '@visx/shape';
 import { localPoint } from '@visx/event';
 
-import {isEmpty} from '../utils/helpers';
+import { isEmpty } from '../utils/helpers';
 
 import { Point, LinePathData, LineGraphProps, ToolTipData } from './lineGraphTypes';
 

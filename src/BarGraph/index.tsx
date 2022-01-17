@@ -4,11 +4,11 @@ import { Bar, Line } from '@visx/shape';
 import { scaleLinear, scaleBand } from '@visx/scale';
 import { AxisBottom } from '@visx/axis';
 
-import {isEmpty} from '../utils/helpers';
-
+import { isEmpty } from '../utils/helpers';
 
 
 class BarGraph extends React.PureComponent<BarGraphProps, State> {
+
 
   render() {
     return this.getGraphUI();

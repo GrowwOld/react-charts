@@ -3,3 +3,6 @@ tsconfig.types.tsbuildinfo
 tsconfig.tsbuildinfo
 lib
 es
+types
+stats-react.json
+stats.html

@@ -6,7 +6,7 @@ import { Line } from '@visx/shape';
 import { EventType } from '@visx/event/lib/types';
 
 import { localPoint } from '@visx/event';
-import {isEmpty} from '../utils/helpers';
+import { isEmpty } from '../utils/helpers';
 
 
 import './candleChart.css';
