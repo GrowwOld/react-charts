@@ -1,6 +1,6 @@
 {
   "name": "@groww-tech/react-charts",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "React charts library tailored as per Groww needs",
   "main": "lib/react-charts.min.js",
   "types": "types/index.d.ts",
