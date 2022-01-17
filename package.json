@@ -1,7 +1,7 @@
 {
   "name": "@groww-tech/react-charts",
-  "version": "0.0.3",
-  "description": "React charts",
+  "version": "0.0.0",
+  "description": "React charts library tailored as per Groww needs",
   "main": "lib/react-charts.min.js",
   "types": "types/index.d.ts",
   "module": "es/index.js",
@@ -36,7 +36,11 @@
       "watch:types": "rimraf ./types && tsc --watch --project ./tsconfig.types.json",
       "now-build": "yarn && yarn build",
       "start": "yarn watch",
-      "stats": "open ./stats.html"
+      "stats": "open ./stats.html",
+      "pushTags": "PACKAGE_VERSION=$(cat package.json | grep \\\"version\\\" | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g' | tr -d '[[:space:]]') && git tag -a v$PACKAGE_VERSION -m \"@groww-tech/react-charts-v$PACKAGE_VERSION\" && git push --tags"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "peerDependencies": {
     "react": "^16.12.0",
