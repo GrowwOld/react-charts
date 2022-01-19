@@ -1,7 +1,7 @@
 node_modules
 tsconfig.types.tsbuildinfo
 tsconfig.tsbuildinfo
-lib
+dist
 es
 types
 stats-react.json

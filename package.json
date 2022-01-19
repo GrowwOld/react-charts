@@ -1,11 +1,12 @@
 {
   "name": "@groww-tech/react-charts",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "React charts library tailored as per Groww needs",
-  "main": "lib/react-charts.min.js",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
   "types": "types/index.d.ts",
   "files": [
-    "lib",
+    "dist",
     "types"
   ],
 
@@ -25,10 +26,10 @@
   "homepage": "https://github.com/Groww/react-charts/blob/main/README.md",
   "scripts": {
       "build": "yarn build:commonjs && yarn build:types",
-      "build:commonjs": "rimraf ./lib && rollup -c && rollup-plugin-visualizer stats-react.json",
+      "build:commonjs": "rimraf ./dist && rollup -c && rollup-plugin-visualizer stats-react.json",
       "build:types": "rimraf ./types && tsc --project ./tsconfig.types.json",
       "watch": "yarn watch:commonjs && yarn watch:types",
-      "watch:commonjs": "rimraf ./lib && cross-env BABEL_ENV=commonjs babel --watch --extensions .ts,.tsx ./src --out-dir lib",
+      "watch:commonjs": "rimraf ./dist && cross-env BABEL_ENV=commonjs babel --watch --extensions .ts,.tsx ./src --out-dir dist",
       "watch:types": "rimraf ./types && tsc --watch --project ./tsconfig.types.json",
       "now-build": "yarn && yarn build",
       "start": "yarn watch",
