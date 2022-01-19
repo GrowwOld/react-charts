@@ -1,8 +1,7 @@
 # Groww React Charts
-We have created this small library specifically for charting needs of Groww.
+This library covers charting needs of Groww.
 
 ## Installation
-Install the dependencies and devDependencies and start the server.
 
 ```sh
 npm i @groww-tech/react-charts

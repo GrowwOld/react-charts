@@ -26,7 +26,7 @@
   "homepage": "https://github.com/Groww/react-charts/blob/main/README.md",
   "scripts": {
       "build": "yarn build:commonjs && yarn build:types",
-      "build:commonjs": "rimraf ./dist && rollup -c && rollup-plugin-visualizer stats-react.json",
+      "build:commonjs": "rimraf ./dist && rollup -c",
       "build:types": "rimraf ./types && tsc --project ./tsconfig.types.json",
       "watch": "yarn watch:commonjs && yarn watch:types",
       "watch:commonjs": "rimraf ./dist && cross-env BABEL_ENV=commonjs babel --watch --extensions .ts,.tsx ./src --out-dir dist",
@@ -83,7 +83,6 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-prettier": "^2.1.0",
     "rollup-plugin-size": "^0.2.2",
-    "rollup-plugin-visualizer": "^5.5.2",
     "eslint": "^7.24.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-react": "^7.23.2"
