@@ -4,7 +4,7 @@ export type Candle = [number, number, number, number, number, number, any];
 export type CandleChartProps= {
   currentGraphData: Array<Candle>;
   color: string;
-  toolTipFormatter: (toolTipData: ToolTipData) => React.ReactNode;
+  toolTipFormatter: (toolTipData: CandleToolTipData) => React.ReactNode;
   maxCandles: number;
   key: string;
   paddingVert: number;
@@ -16,7 +16,7 @@ export type CandleChartProps= {
 }
 
 
-export type ToolTipData = {
+export type CandleToolTipData = {
   candle: Candle;
   tooltipLeft: number;
   tooltipTop: number;

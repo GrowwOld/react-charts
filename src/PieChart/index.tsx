@@ -152,3 +152,4 @@ type State = {
 
 
 export default PieChart;
+export type { PieData };
