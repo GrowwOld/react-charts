@@ -278,3 +278,4 @@ const LineGraph = (props: LineGraphProps) => {
 
 
 export default LineGraph;
+export type { Point, LinePathData, LineGraphProps, ToolTipData };
