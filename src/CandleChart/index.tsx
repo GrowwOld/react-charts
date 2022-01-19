@@ -6,18 +6,17 @@ import { Line } from '@visx/shape';
 import { EventType } from '@visx/event/lib/types';
 
 import { localPoint } from '@visx/event';
-import {isEmpty} from '../utils/helpers';
+import { isEmpty } from '../utils/helpers';
 
-
+import { Candle, CandleChartProps, CandleToolTipData } from './candleChartTypes';
 import './candleChart.css';
-import { Candle, CandleChartProps, ToolTipData } from './candleChartTypes';
 
 let toolTipRef: HTMLDivElement | null = null;
 
 
 const CandleChart = (props: CandleChartProps) => {
 
-  const [ tooltipData, setToolTipData ] = useState<ToolTipData>();
+  const [ tooltipData, setToolTipData ] = useState<CandleToolTipData>();
 
   const {
     currentGraphData,
@@ -273,3 +272,4 @@ const CandleChart = (props: CandleChartProps) => {
 
 
 export default CandleChart;
+export type { Candle, CandleChartProps, CandleToolTipData };
