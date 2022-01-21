@@ -8,7 +8,7 @@ import { localPoint } from '@visx/event';
 
 import { isEmpty } from '../utils/helpers';
 
-import { Point, LinePathData, LineGraphProps, ToolTipData } from './lineGraphTypes';
+import type { Point, LinePathData, LineGraphProps, ToolTipData } from './lineGraphTypes';
 
 import './lineGraph.css';
 

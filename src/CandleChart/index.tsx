@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { max, min, bisector } from 'd3-array';
 
-import { Group } from '@visx/group';
 import { Line } from '@visx/shape';
 import { EventType } from '@visx/event/lib/types';
-
 import { localPoint } from '@visx/event';
+
 import { isEmpty } from '../utils/helpers';
 
-import { Candle, CandleChartProps, CandleToolTipData } from './candleChartTypes';
+import type { Candle, CandleChartProps, CandleToolTipData } from './candleChartTypes';
 import './candleChart.css';
 
 let toolTipRef: HTMLDivElement | null = null;
@@ -196,7 +195,7 @@ const CandleChart = (props: CandleChartProps) => {
         onMouseMove={handleTooltip}
         onMouseLeave={hideTooltip }
       >
-        <Group key={'linesxssedc'}>
+        <g key={'linesxssedc'}>
           {
             tooltipData && allowTooltip && (
 
@@ -259,7 +258,7 @@ const CandleChart = (props: CandleChartProps) => {
               );
             })
           }
-        </Group>
+        </g>
       </svg>
       {
         tooltipData && allowTooltip && (
