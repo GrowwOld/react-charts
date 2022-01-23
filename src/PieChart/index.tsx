@@ -38,46 +38,48 @@ const PieChart = (props: PieChartProps) => {
 
 
   const getInnerPieUI = () => {
-    <Pie
-      data={data}
-      pieValue={getValue}
-      outerRadius={radius}
-      innerRadius={radius - donutThickness}
-      padAngle={0}
-    >
-      {
-        (pie) => {
-          return pie.arcs.map((arc, i) => {
-            const [ centroidX, centroidY ] = pie.path.centroid(arc);
+    return (
+      <Pie
+        data={data}
+        pieValue={getValue}
+        outerRadius={radius}
+        innerRadius={radius - donutThickness}
+        padAngle={0}
+      >
+        {
+          (pie) => {
+            return pie.arcs.map((arc, i) => {
+              const [ centroidX, centroidY ] = pie.path.centroid(arc);
 
-            return (
-              <g key={`letters-${arc.data.value}-${i}`}>
-                <path
-                  d={pie.path(arc) ?? undefined}
-                  fill={arc.data.color}
-                  onMouseEnter={() => onMouseEnter(arc.data)}
-                  onMouseLeave={() => onMouseLeave()}
-                />
-                {
-                  showArcsValue && (
-                    <text
-                      fill="black"
-                      textAnchor="middle"
-                      x={centroidX}
-                      y={centroidY}
-                      dy=".33em"
-                      className={textClass}
-                    >
-                      {arc.data.value > 1 ? arc.data.value : ''}
-                    </text>
-                  )
-                }
-              </g>
-            );
-          });
+              return (
+                <g key={`letters-${arc.data.value}-${i}`}>
+                  <path
+                    d={pie.path(arc) ?? undefined}
+                    fill={arc.data.color}
+                    onMouseEnter={() => onMouseEnter(arc.data)}
+                    onMouseLeave={() => onMouseLeave()}
+                  />
+                  {
+                    showArcsValue && (
+                      <text
+                        fill="black"
+                        textAnchor="middle"
+                        x={centroidX}
+                        y={centroidY}
+                        dy=".33em"
+                        className={textClass}
+                      >
+                        {arc.data.value > 1 ? arc.data.value : ''}
+                      </text>
+                    )
+                  }
+                </g>
+              );
+            });
+          }
         }
-      }
-    </Pie>;
+      </Pie>
+    );
   };
 
   return (

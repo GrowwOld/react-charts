@@ -25,7 +25,10 @@ const CandleChart = (props: CandleChartProps) => {
     height,
     width,
     allowTooltip,
-    showVolumeBars
+    showVolumeBars,
+    candleWidth,
+    candleColor,
+    volumeBarMaxHeight
   } = props;
 
 
@@ -87,7 +90,7 @@ const CandleChart = (props: CandleChartProps) => {
 
   const scaleYVolumeData = {
     domain: [ minVol, maxVol ],
-    range: [ height - paddingVert, height - paddingVert - 100 ] //100 as volume bar max height
+    range: [ height - paddingVert, height - paddingVert - volumeBarMaxHeight ]
   };
 
 
@@ -212,7 +215,7 @@ const CandleChart = (props: CandleChartProps) => {
             series.map((d, j) => {
               const [ ts, o, h, l, c, v ] = d;
               const xVal = xScale(ts);
-              const clr = o > c ? 'var(--growwRed)' : 'var(--primaryClr)';
+              const clr = o > c ? candleColor[1] : candleColor[0];
 
 
               const barY = yScaleVolume(v);
@@ -231,7 +234,7 @@ const CandleChart = (props: CandleChartProps) => {
                     from={{ x: xVal, y: yh }}
                     to={{ x: xVal, y: yl }}
                     stroke={clr}
-                    strokeWidth={1}
+                    strokeWidth={candleWidth[0]}
                     pointerEvents="none"
                   />
                   <Line
@@ -240,7 +243,7 @@ const CandleChart = (props: CandleChartProps) => {
                     from={{ x: xVal, y: yo }}
                     to={{ x: xVal, y: yc }}
                     stroke={clr}
-                    strokeWidth={5}
+                    strokeWidth={candleWidth[1]}
                     pointerEvents="none"
                   />
                   {
@@ -251,7 +254,7 @@ const CandleChart = (props: CandleChartProps) => {
                           from={{ x: xVal, y: height }}
                           to={{ x: xVal, y: barY }}
                           stroke={clr}
-                          strokeWidth={4}
+                          strokeWidth={candleWidth[2]}
                         />
                   }
                 </>

@@ -102,6 +102,7 @@ const LineGraph = (props: LineGraphProps) => {
 
 
   const handleTooltip = (e: EventType) => {
+    e.stopPropagation();
     const { onMouseEnter } = props;
 
 
@@ -236,7 +237,10 @@ const LineGraph = (props: LineGraphProps) => {
       <svg width={width}
         height={height}
         onMouseMove={handleTooltip}
+        onTouchMove={handleTooltip}
+        onTouchStart={handleTooltip}
         onMouseLeave={onMouseOut}
+        onTouchEnd={onMouseOut}
       >
         <g>
           {

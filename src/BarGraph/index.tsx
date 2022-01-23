@@ -2,6 +2,7 @@ import React from 'react';
 import { scaleBand } from '@visx/scale';
 import { AxisBottom } from '@visx/axis';
 import { isEmpty } from '../utils/helpers';
+import './barGraph.css';
 
 
 const BarGraph = (props: BarGraphProps) => {
@@ -13,11 +14,11 @@ const BarGraph = (props: BarGraphProps) => {
     height,
     width,
     maxBarWidth,
-    barColor,
     axisColor,
     axisLabelFontSize,
     axisLabelColor,
-    getBarTopTextUI
+    getBarTopTextUI,
+    showAxis
   } = props;
 
 
@@ -27,13 +28,23 @@ const BarGraph = (props: BarGraphProps) => {
   const getYValue = (d: BarData) => d[1];
 
 
+  const getBarColor = (d: BarData) => d[2];
+
+
   if (isEmpty(data)) return null;
 
 
   const bottomAxisHeight = 22;
   const graphHeight = height - bottomAxisHeight;
-  const minValue = Math.min(...data.map(getYValue));
+  let minValue = getYValue(data[0]);
+  let maxValue = minValue;
 
+  data.forEach(d => {
+    const yVal = getYValue(d);
+
+    minValue = Math.min(minValue, yVal);
+    maxValue = Math.max(maxValue, yVal);
+  });
   const xMax = width;
   const yMin = topMargin;
 
@@ -47,7 +58,7 @@ const BarGraph = (props: BarGraphProps) => {
   });
 
   const scaleYData = {
-    domain: [ Math.min(0, Math.min(...data?.map(getYValue))), Math.max(0, ...data?.map(getYValue)) ],
+    domain: [ Math.min(0, minValue), maxValue ],
     range: [ yMax, yMin ]
   };
 
@@ -119,14 +130,14 @@ const BarGraph = (props: BarGraphProps) => {
               <React.Fragment key={getXValue(d) + getYValue(d)}>
                 {getBarTopTextUI(textX, textY, d)}
                 <line
-                  className='gahaha'
+                  className='bar21animation'
                   x1={textX}
                   x2={textX}
                   y1={yScale0}
                   y2={barY}
                   stroke-width={barBandwidth}
                   height={barHeight}
-                  stroke={barColor}
+                  stroke={getBarColor(d)}
                 >
                 </line>
               </React.Fragment>
@@ -144,18 +155,17 @@ const BarGraph = (props: BarGraphProps) => {
 
       </g>
 
-      {getBottomAxisUI()}
+      {showAxis && getBottomAxisUI()}
     </svg>
   );
 };
 
 
-export type BarData = [string, number]
+export type BarData = [string, number, string] // xasis value, yaxis value, bar color
 
 
 type BarGraphProps = {
   data: BarData[];
-  barColor: string;
   axisColor: string;
   topMargin: number;
   bottomMargin: number;
@@ -165,6 +175,7 @@ type BarGraphProps = {
   axisLabelFontSize?: number;
   axisLabelColor?: string;
   getBarTopTextUI: (textX : number, textY: number, barData: BarData) => SVGElement;
+  showAxis: boolean;
 }
 
 export default BarGraph;
