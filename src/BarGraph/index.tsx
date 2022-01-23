@@ -18,7 +18,8 @@ const BarGraph = (props: BarGraphProps) => {
     axisLabelFontSize,
     axisLabelColor,
     getBarTopTextUI,
-    showAxis
+    showAxis,
+    bottomAxisHeight
   } = props;
 
 
@@ -34,10 +35,8 @@ const BarGraph = (props: BarGraphProps) => {
   if (isEmpty(data)) return null;
 
 
-  const bottomAxisHeight = 22;
   const graphHeight = height - bottomAxisHeight;
-  let minValue = getYValue(data[0]);
-  let maxValue = minValue;
+  let minValue = 0, maxValue = 0;
 
   data.forEach(d => {
     const yVal = getYValue(d);
@@ -117,7 +116,7 @@ const BarGraph = (props: BarGraphProps) => {
 
             if (maxBarWidth && barBandwidth > maxBarWidth) {
               barX = barX + (barBandwidth - maxBarWidth) / 2;
-              barBandwidth = 20;
+              barBandwidth = maxBarWidth;
             }
 
             const barY = yScaleY;
@@ -161,21 +160,41 @@ const BarGraph = (props: BarGraphProps) => {
 };
 
 
-export type BarData = [string, number, string] // xasis value, yaxis value, bar color
+export type BarData = [string, number, string]
+ // xasis value, yaxis value, bar color
 
-
-type BarGraphProps = {
-  data: BarData[];
+type DefaultProps = {
   axisColor: string;
   topMargin: number;
   bottomMargin: number;
-  width: number;
-  height: number;
-  maxBarWidth?: number;
+  maxBarWidth: number;
+  getBarTopTextUI: (textX : number, textY: number, barData: BarData) => SVGElement | null;
+  showAxis: boolean;
   axisLabelFontSize?: number;
   axisLabelColor?: string;
-  getBarTopTextUI: (textX : number, textY: number, barData: BarData) => SVGElement;
-  showAxis: boolean;
+  bottomAxisHeight: number;
 }
+
+
+type RequiredProps = {
+  data: BarData[];
+  width: number;
+  height: number;
+}
+
+BarGraph.defaultProps = {
+  axisColor: 'var(--subText)',
+  topMargin: 0,
+  bottomMargin: 0,
+  maxBarWidth: 20,
+  getBarTopTextUI: () => null,
+  showAxis: false,
+  axisLabelFontSize: 11,
+  axisLabelColor: 'var(--text)',
+  bottomAxisHeight: 22
+} as DefaultProps;
+
+
+export type BarGraphProps = RequiredProps & DefaultProps;
 
 export default BarGraph;
