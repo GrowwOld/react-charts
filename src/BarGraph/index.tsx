@@ -1,171 +1,200 @@
 import React from 'react';
-import { Group } from '@visx/group';
-import { Bar, Line } from '@visx/shape';
-import { scaleLinear, scaleBand } from '@visx/scale';
+import { scaleBand } from '@visx/scale';
 import { AxisBottom } from '@visx/axis';
-
 import { isEmpty } from '../utils/helpers';
+import './barGraph.css';
 
 
-class BarGraph extends React.PureComponent<BarGraphProps, State> {
+const BarGraph = (props: BarGraphProps) => {
+
+  const {
+    data,
+    topMargin,
+    bottomMargin,
+    height,
+    width,
+    maxBarWidth,
+    axisColor,
+    axisLabelFontSize,
+    axisLabelColor,
+    getBarTopTextUI,
+    showAxis,
+    bottomAxisHeight
+  } = props;
 
 
-  render() {
-    return this.getGraphUI();
-  }
+  const getXValue = (d: BarData) => d[0];
 
 
-  getXValue = (d: BarData) => d[0];
+  const getYValue = (d: BarData) => d[1];
 
 
-  getYValue = (d: BarData) => d[1];
+  const getBarColor = (d: BarData) => d[2];
 
 
-  getFormattedText = (textX : number, textY: number, yVal: number) => {
+  if (isEmpty(data)) return null;
 
+
+  const graphHeight = height - bottomAxisHeight;
+  let minValue = 0, maxValue = 0;
+
+  data.forEach(d => {
+    const yVal = getYValue(d);
+
+    minValue = Math.min(minValue, yVal);
+    maxValue = Math.max(maxValue, yVal);
+  });
+  const xMax = width;
+  const yMin = topMargin;
+
+  const yMax = graphHeight - topMargin - (minValue < 0 ? bottomMargin : 0);
+
+  const xScale = scaleBand({
+    range: [ 0, xMax ],
+    round: true,
+    domain: data.map(getXValue),
+    padding: 0
+  });
+
+  const scaleYData = {
+    domain: [ Math.min(0, minValue), maxValue ],
+    range: [ yMax, yMin ]
+  };
+
+
+  const yScale = (yVal: number) => {
     return (
-      <text
-        x={textX}
-        y={textY}
-        textAnchor="middle"
-        className="fs12 clrText"
-      >
-        <tspan style={{ fill: 'var(--text)' }}>{yVal}</tspan>
-      </text>
+      scaleYData.range[0] +
+            (yVal - scaleYData.domain[0]) * (scaleYData.range[1] - scaleYData.range[0]) / (scaleYData.domain[1] - scaleYData.domain[0])
     );
-  }
+  };
+
+  const yScale0 = yScale(0);
 
 
-  getGraphUI = () => {
-    const { data, topMargin, bottomMargin, height, width } = this.props;
-
-
-    if (isEmpty(data)) return null;
-
-
-    const bottomAxisHeight = 22;
-    const graphHeight = height - bottomAxisHeight;
-    const minValue = Math.min(...data.map(this.getYValue));
-
-    const events = false;
-    const xMax = width;
-    const yMin = topMargin;
-
-    const yMax = graphHeight - topMargin - (minValue < 0 ? bottomMargin : 0);
-
-    const xScale = scaleBand({
-      range: [ 0, xMax ],
-      round: true,
-      domain: data.map(this.getXValue),
-      padding: 0
-
-    });
-    const yScale = scaleLinear({
-      range: [ yMax, yMin ],
-      round: true,
-      domain: [ Math.min(0, Math.min(...data?.map(this.getYValue))), Math.max(...data?.map(this.getYValue)) ]
-    });
-
-    const yScale0 = yScale(0);
-
-    if (width < 10) {
-      return null;
-    }
-
+  const getBottomAxisUI = () => {
     return (
-      <svg width={width}
+      <AxisBottom
+        top={yMax + (minValue < 0 ? bottomMargin : 0)}
+        scale={xScale}
+        tickFormat={(d) => d}
+        stroke={axisColor}
+        orientation='bottom'
+        hideTicks
+        tickLabelProps={
+          () => ({
+            fill: axisLabelColor,
+            fontSize: axisLabelFontSize,
+            textAnchor: 'middle'
+          })
+        }
+      />
+    );
+  };
+
+
+  return (
+    <svg width={width}
+      height={height}
+    >
+      <rect width={width}
         height={height}
-      >
-        <rect width={width}
-          height={height}
-          fill="var(--primaryBg)"
-          rx={14}
-          style={{ overflow: 'visible' }}
+        fill="var(--constantTransparent)"
+        style={{ overflow: 'visible' }}
+      />
+      <g>
+        {
+          data.map(d => {
+            const y = getYValue(d);
+            const yScaleY = yScale(y);
+            const isNegative = y < 0;
+            const xval = getXValue(d);
+
+            let barBandwidth = xScale.bandwidth();
+
+            let barX = xScale(xval) ?? 0;
+
+            if (maxBarWidth && barBandwidth > maxBarWidth) {
+              barX = barX + (barBandwidth - maxBarWidth) / 2;
+              barBandwidth = maxBarWidth;
+            }
+
+            const barY = yScaleY;
+            const barHeight = isNegative ? Math.abs(yScaleY - yScale0) : yScale0 - barY;
+            const textX = barX + barBandwidth / 2;
+            const textY = isNegative ? barY + 12 : barY - 5;
+
+
+            return (
+              <React.Fragment key={getXValue(d) + getYValue(d)}>
+                {getBarTopTextUI(textX, textY, d)}
+                <line
+                  className='bar21animation'
+                  x1={textX}
+                  x2={textX}
+                  y1={yScale0}
+                  y2={barY}
+                  stroke-width={barBandwidth}
+                  height={barHeight}
+                  stroke={getBarColor(d)}
+                >
+                </line>
+              </React.Fragment>
+            );
+          })
+        }
+        <line
+          x1={0}
+          y1={yScale0 }
+          x2= {xMax}
+          y2= {yScale0 }
+          stroke={axisColor}
+          strokeWidth={1}
         />
-        <Group>
-          {
-            data.map(d => {
-              const y = this.getYValue(d);
-              const yScaleY = yScale(y);
-              const isNegative = y < 0;
-              const xval = this.getXValue(d);
-              let barBandwidth = xScale.bandwidth();
-              let barX = xScale(xval) ?? 0;
 
-              if (barBandwidth > 20) {
-                barX = barX + (barBandwidth - 20) / 2;
-                barBandwidth = 20;
-              }
+      </g>
 
-              const barY = isNegative ? yScale0 : yScaleY;
-              const barHeight = isNegative ? Math.abs(yScaleY - yScale0) : yScale0 - barY;
-              const textX = barX + barBandwidth / 2;
-              const textY = isNegative ? barY + barHeight + 12 : barY - 5;
-
-              return (
-                <React.Fragment>
-                  {this.getFormattedText(textX, textY, y)}
-                  <Bar
-                    key={`bar-${xval}`}
-                    x={barX}
-                    y={barY}
-                    width={barBandwidth}
-                    height={barHeight}
-                    fill="var(--primaryClr)"
-                    onClick={
-                      () => {
-                        if (events) alert(`clicked: ${JSON.stringify(Object.values(d))}`);
-                      }
-                    }
-                  />
-                </React.Fragment>
-              );
-            })
-          }
-          <Line
-            from={{ x: 0, y: yScale0 }}
-            to={{ x: xMax, y: yScale0 }}
-            stroke={'var(--border)'}
-            strokeWidth={1}
-          />
-
-        </Group>
-
-        <AxisBottom
-          top={yMax + (minValue < 0 ? bottomMargin : 0)}
-          scale={xScale}
-          tickFormat={(d) => d}
-          stroke='var(--border)'
-          orientation='bottom'
-          hideTicks
-          tickLabelProps={
-            () => ({
-              fill: 'var(--subText)',
-              fontSize: 11,
-              textAnchor: 'middle'
-            })
-          }
-        />
-      </svg>
-    );
-
-  }
+      {showAxis && getBottomAxisUI()}
+    </svg>
+  );
+};
 
 
+export type BarData = [string, number, string]
+ // xasis value, yaxis value, bar color
+
+type DefaultProps = {
+  axisColor: string;
+  topMargin: number;
+  bottomMargin: number;
+  maxBarWidth: number;
+  getBarTopTextUI: (textX : number, textY: number, barData: BarData) => SVGElement | null;
+  showAxis: boolean;
+  axisLabelFontSize?: number;
+  axisLabelColor?: string;
+  bottomAxisHeight: number;
 }
 
 
-type State = {}
-
-export type BarData = [string, number]
-
-
-type BarGraphProps = {
+type RequiredProps = {
   data: BarData[];
-  topMargin: number;
-  bottomMargin: number;
   width: number;
   height: number;
 }
+
+BarGraph.defaultProps = {
+  axisColor: 'var(--subText)',
+  topMargin: 0,
+  bottomMargin: 0,
+  maxBarWidth: 20,
+  getBarTopTextUI: () => null,
+  showAxis: false,
+  axisLabelFontSize: 11,
+  axisLabelColor: 'var(--text)',
+  bottomAxisHeight: 22
+} as DefaultProps;
+
+
+export type BarGraphProps = RequiredProps & DefaultProps;
 
 export default BarGraph;
