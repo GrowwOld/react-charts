@@ -91,7 +91,6 @@
     "@babel/runtime": "^7.14.6",
     "@visx/axis": "^2.2.2",
     "@visx/event": "^2.1.2",
-    "@visx/group": "^2.1.0",
     "@visx/scale": "^2.2.2",
     "@visx/shape": "^2.2.2"
   },

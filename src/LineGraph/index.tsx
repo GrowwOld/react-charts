@@ -8,7 +8,7 @@ import { localPoint } from '@visx/event';
 
 import { isEmpty } from '../utils/helpers';
 
-import { Point, LinePathData, LineGraphProps, ToolTipData } from './lineGraphTypes';
+import type { Point, LinePathData, LineGraphProps, ToolTipData } from './lineGraphTypes';
 
 import './lineGraph.css';
 
@@ -102,6 +102,7 @@ const LineGraph = (props: LineGraphProps) => {
 
 
   const handleTooltip = (e: EventType) => {
+    e.stopPropagation();
     const { onMouseEnter } = props;
 
 
@@ -236,7 +237,10 @@ const LineGraph = (props: LineGraphProps) => {
       <svg width={width}
         height={height}
         onMouseMove={handleTooltip}
+        onTouchMove={handleTooltip}
+        onTouchStart={handleTooltip}
         onMouseLeave={onMouseOut}
+        onTouchEnd={onMouseOut}
       >
         <g>
           {
