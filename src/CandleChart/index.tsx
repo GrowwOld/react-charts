@@ -1,19 +1,18 @@
 import React, { useState } from 'react';
 import { max, min, bisector } from 'd3-array';
 
-import { Line } from '@visx/shape';
 import { EventType } from '@visx/event/lib/types';
 import { localPoint } from '@visx/event';
 
 import { isEmpty } from '../utils/helpers';
 
-import type { Candle, CandleChartProps, CandleToolTipData } from './candleChartTypes';
+import type { Candle, CandleChartDefaultProps, CandleChartRequiredProps, CandleToolTipData } from './candleChartTypes';
 import './candleChart.css';
 
 let toolTipRef: HTMLDivElement | null = null;
 
 
-const CandleChart = (props: CandleChartProps) => {
+const CandleChart = (props: Props) => {
 
   const [ tooltipData, setToolTipData ] = useState<CandleToolTipData>();
 
@@ -28,7 +27,8 @@ const CandleChart = (props: CandleChartProps) => {
     showVolumeBars,
     candleWidth,
     candleColor,
-    volumeBarMaxHeight
+    volumeBarMaxHeight,
+    toolTipHeight
   } = props;
 
 
@@ -145,7 +145,7 @@ const CandleChart = (props: CandleChartProps) => {
       backgroundColor: 'var(--constantTransparent)',
       position: 'absolute',
       borderRadius: '3px',
-      transform: `translate(${finalToolTipLeft}px, -10px)`
+      transform: `translate(${finalToolTipLeft}px, ${-1 * toolTipHeight}px)`
 
     };
 
@@ -164,11 +164,16 @@ const CandleChart = (props: CandleChartProps) => {
 
 
   const hideTooltip = () => {
+    const { onMouseLeave } = props;
+
     setToolTipData(undefined);
+    onMouseLeave?.();
+
   };
 
 
   const handleTooltip = (e: EventType) => {
+    const { onMouseEnter } = props;
 
     const { x } = localPoint(e) || { x: 0 };
     const x0 = invertX(x);
@@ -187,7 +192,7 @@ const CandleChart = (props: CandleChartProps) => {
       tooltipLeft: xScale(getIndex(indexData)),
       tooltipTop: 0
     });
-
+    onMouseEnter?.(indexData);
   };
 
   return (
@@ -197,14 +202,20 @@ const CandleChart = (props: CandleChartProps) => {
         height={height}
         onMouseMove={handleTooltip}
         onMouseLeave={hideTooltip }
+        onTouchMove={handleTooltip}
+        onTouchStart={handleTooltip}
+        onTouchEnd={hideTooltip}
+        onTouchCancel={hideTooltip}
       >
         <g key={'linesxssedc'}>
           {
             tooltipData && allowTooltip && (
 
-              <Line
-                from={{ x: tooltipData.tooltipLeft, y: 0 }}
-                to={{ x: tooltipData.tooltipLeft, y: height }}
+              <line
+                x1={tooltipData.tooltipLeft}
+                y1={0}
+                x2={tooltipData.tooltipLeft}
+                y2={height}
                 stroke='var(--border)'
                 strokeWidth={1}
                 pointerEvents="none"
@@ -228,31 +239,37 @@ const CandleChart = (props: CandleChartProps) => {
 
               return (
                 <>
-                  <Line
+                  <line
                     className='cc41Candle'
                     key={j}
-                    from={{ x: xVal, y: yh }}
-                    to={{ x: xVal, y: yl }}
+                    x1={xVal}
+                    x2={xVal}
+                    y1={yh}
+                    y2={yl}
                     stroke={clr}
                     strokeWidth={candleWidth[0]}
                     pointerEvents="none"
                   />
-                  <Line
+                  <line
                     className='cc41Candle'
                     key={'fad' + j}
-                    from={{ x: xVal, y: yo }}
-                    to={{ x: xVal, y: yc }}
+                    x1={xVal}
+                    x2={xVal}
+                    y1={yo}
+                    y2={yc}
                     stroke={clr}
                     strokeWidth={candleWidth[1]}
                     pointerEvents="none"
                   />
                   {
                     showVolumeBars &&
-                        <Line
+                        <line
                           className="cc41Opacity3"
                           key={'asd' + j}
-                          from={{ x: xVal, y: height }}
-                          to={{ x: xVal, y: barY }}
+                          x1={xVal}
+                          x2={xVal}
+                          y1={height}
+                          y2={barY}
                           stroke={clr}
                           strokeWidth={candleWidth[2]}
                         />
@@ -273,5 +290,16 @@ const CandleChart = (props: CandleChartProps) => {
 };
 
 
+type Props = CandleChartDefaultProps & CandleChartRequiredProps
+
+CandleChart.defaultProps = {
+  toolTipHeight: 10,
+  onMouseEnter: () => {},
+  onMouseLeave: () => {},
+  onTouchEnd: () => {},
+  showVolumeBars: true
+} as CandleChartDefaultProps;
+
+
 export default CandleChart;
-export type { Candle, CandleChartProps, CandleToolTipData };
+export type { Candle, CandleChartRequiredProps, CandleChartDefaultProps, CandleToolTipData };
