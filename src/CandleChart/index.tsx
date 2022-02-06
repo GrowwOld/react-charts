@@ -28,9 +28,12 @@ const CandleChart = (props: Props) => {
     candleWidth,
     candleColor,
     volumeBarMaxHeight,
-    toolTipHeight
+    toolTipHeight,
+    minX,
+    maxX,
+    minY,
+    maxY
   } = props;
-
 
   if (isEmpty(currentGraphData)) {
     return null;
@@ -49,10 +52,10 @@ const CandleChart = (props: Props) => {
 
 
   const getVol = (d: Candle) => d[5];
-  let minY: number = Number.MAX_SAFE_INTEGER;
-  let maxY:number = Number.MIN_SAFE_INTEGER;
-  let minX = Number.MAX_SAFE_INTEGER;
-  let maxX = Number.MIN_SAFE_INTEGER;
+  let minYValue: number = minY ?? Number.MAX_SAFE_INTEGER;
+  let maxYValue:number = maxY ?? Number.MIN_SAFE_INTEGER;
+  let minXValue = minX ?? Number.MAX_SAFE_INTEGER;
+  let maxXValue = maxX ?? Number.MIN_SAFE_INTEGER;
   let maxVol = Number.MIN_SAFE_INTEGER;
   let minVol = Number.MAX_SAFE_INTEGER;
 
@@ -64,13 +67,13 @@ const CandleChart = (props: Props) => {
   const tempMaxVol = max(currentGraphData, getVol);
 
 
-  if (tempMinY !== undefined) { minY = Math.min(minY, tempMinY); }
+  if (tempMinY !== undefined) { minYValue = Math.min(minYValue, tempMinY); }
 
-  if (tempMaxY !== undefined) { maxY = Math.max(maxY, tempMaxY); }
+  if (tempMaxY !== undefined) { maxYValue = Math.max(maxYValue, tempMaxY); }
 
-  if (tempMinX !== undefined) { minX = Math.min(minX, tempMinX); }
+  if (tempMinX !== undefined) { minXValue = Math.min(minXValue, tempMinX); }
 
-  if (tempMaxX !== undefined) { maxX = Math.max(maxX, tempMaxX); }
+  if (tempMaxX !== undefined) { maxXValue = Math.max(maxXValue, tempMaxX); }
 
   if (tempMinVol !== undefined) { minVol = Math.min(minVol, tempMinVol); }
 
@@ -78,13 +81,13 @@ const CandleChart = (props: Props) => {
 
 
   const scaleXData = {
-    domain: [ minX, maxX ],
+    domain: [ minXValue, maxXValue ],
     range: [ 0 + paddingHorz, width - paddingHorz ]
   };
 
 
   const scaleYData = {
-    domain: [ minY, maxY ],
+    domain: [ minYValue, maxYValue ],
     range: [ height - paddingVert, paddingVert ]
   };
 
@@ -97,7 +100,7 @@ const CandleChart = (props: Props) => {
   const yScale = (yVal: number) => {
     return (
       scaleYData.range[0] +
-          (yVal - scaleYData.domain[0]) * (scaleYData.range[1] - scaleYData.range[0]) / (scaleYData.domain[1] - scaleYData.domain[0])
+          (yVal - scaleYData.domain[0]) * (scaleYData.range[1] - scaleYData.range[0]) / ((scaleYData.domain[1] - scaleYData.domain[0]) || scaleYData.domain[1])
     );
   };
 
@@ -105,7 +108,7 @@ const CandleChart = (props: Props) => {
   const yScaleVolume = (yVal: number) => {
     return (
       scaleYVolumeData.range[0] +
-          (yVal - scaleYVolumeData.domain[0]) * (scaleYVolumeData.range[1] - scaleYVolumeData.range[0]) / (scaleYVolumeData.domain[1] - scaleYVolumeData.domain[0])
+          (yVal - scaleYVolumeData.domain[0]) * (scaleYVolumeData.range[1] - scaleYVolumeData.range[0]) / ((scaleYVolumeData.domain[1] - scaleYVolumeData.domain[0]) || scaleYVolumeData.domain[1])
     );
   };
 
@@ -113,7 +116,7 @@ const CandleChart = (props: Props) => {
   const xScale = (xVal: number) : number => {
     return (
       scaleXData.range[0] +
-          (xVal - scaleXData.domain[0]) * (scaleXData.range[1] - scaleXData.range[0]) / (scaleXData.domain[1] - scaleXData.domain[0])
+          (xVal - scaleXData.domain[0]) * (scaleXData.range[1] - scaleXData.range[0]) / ((scaleXData.domain[1] - scaleXData.domain[0]) || scaleXData.domain[1])
     );
   };
 

@@ -14,6 +14,10 @@ export type CandleChartRequiredProps= {
   candleWidth: [number, number, number]; // candle width for body, tail and volume part respectively
   candleColor: [string, string]; // candle colors for positive and negative change resp
   volumeBarMaxHeight: number;
+  minX?: number;
+  maxX?: number;
+  minY?:number;
+  maxY?: number;
 }
 
 export type CandleChartDefaultProps = {
