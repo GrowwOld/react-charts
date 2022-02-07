@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 
 import { min, max, bisector } from 'd3-array';
 
-
 import { LinePath } from '@visx/shape';
 import { localPoint } from '@visx/event';
 
