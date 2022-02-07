@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 
 import { min, max, bisector } from 'd3-array';
 
-import { EventType } from '@visx/event/lib/types';
 import { LinePath } from '@visx/shape';
 import { localPoint } from '@visx/event';
 
+import type { EventType } from '../utils/commonTypes';
 import { isEmpty } from '../utils/helpers';
 
 import type { Point, LinePathData, LineGraphProps, ToolTipData } from './lineGraphTypes';
@@ -102,7 +102,7 @@ const LineGraph = (props: LineGraphProps) => {
 
 
   const handleTooltip = (e: EventType) => {
-    e.stopPropagation();
+    e.preventDefault();
     const { onMouseEnter } = props;
 
 
