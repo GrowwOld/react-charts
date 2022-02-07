@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import { max, min, bisector } from 'd3-array';
-
-import { EventType } from '@visx/event/lib/types';
-import { localPoint } from '@visx/event';
-
-import { isEmpty } from '../utils/helpers';
+import { localPoint, isEmpty } from '../utils/helpers';
 
 import type { Candle, CandleChartDefaultProps, CandleChartRequiredProps, CandleToolTipData } from './candleChartTypes';
+import type { EventType } from '../utils/commonTypes';
+
 import './candleChart.css';
 
 let toolTipRef: HTMLDivElement | null = null;
@@ -93,7 +91,7 @@ const CandleChart = (props: Props) => {
 
   const scaleYVolumeData = {
     domain: [ minVol, maxVol ],
-    range: [ height - paddingVert, height - paddingVert - volumeBarMaxHeight ]
+    range: [ height, height - paddingVert - volumeBarMaxHeight ]
   };
 
 
@@ -176,6 +174,8 @@ const CandleChart = (props: Props) => {
 
 
   const handleTooltip = (e: EventType) => {
+    e.preventDefault();
+
     const { onMouseEnter } = props;
 
     const { x } = localPoint(e) || { x: 0 };
