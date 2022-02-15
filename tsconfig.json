@@ -1,18 +1,4 @@
 {
-  "compilerOptions": {
-    "esModuleInterop": true,
-    "isolatedModules": true,
-    "jsx": "react",
-    "lib": ["ESNext", "dom"],
-    "target": "es5",
-    "noEmit": true,
-    "noImplicitAny": true,
-    "noImplicitReturns": false,
-    "noImplicitThis": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "skipLibCheck": true,
-    "strict": true
-  },
+  "extends": "@groww-tech/tsconfig",
   "include": ["./src"]
 }
