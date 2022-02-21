@@ -94,6 +94,7 @@ const PieChart = (props: PieChartProps) => {
           outerRadius={radius + hoveredPieThicknes}
           innerRadius={radius + 1}
           padAngle={0.005}
+          pieSortValues={null}
         >
           {
             (pie1) => {
