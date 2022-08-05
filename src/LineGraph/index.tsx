@@ -102,7 +102,8 @@ const LineGraph = (props: LineGraphProps) => {
 
 
   const handleTooltip = (e: EventType) => {
-    e.preventDefault();
+    // preventing default action causing scrolling issue for end user
+    // e.preventDefault();
     const { onMouseEnter } = props;
 
 
